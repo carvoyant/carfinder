@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ti:app xmlns:ti="http://ti.appcelerator.org">
+    <id>com.carvoyant.carfinder</id>
+    <name>Car Finder</name>
+    <version>1.0</version>
+    <publisher>Carvoyant</publisher>
+    <url>http://carvoyant.com</url>
+    <description>Car Finder is a mobile application (Android and iOS) that is used to help you find your car. A carvoyant dongle with API key is required: http://www.carvoyant.com/services/developers/</description>
+    <copyright>2013 by Carvoyant</copyright>
+    <icon>appicon.png</icon>
+    <persistent-wifi>false</persistent-wifi>
+    <prerendered-icon>false</prerendered-icon>
+    <statusbar-style>default</statusbar-style>
+    <statusbar-hidden>false</statusbar-hidden>
+    <fullscreen>false</fullscreen>
+    <navbar-hidden>false</navbar-hidden>
+    <analytics>true</analytics>
+    <guid>aaeaa8d5-e4d1-4170-b813-4e872c5bf1c7</guid>
+    <property name="ti.ui.defaultunit" type="string">system</property>
+    <iphone>
+        <orientations device="iphone">
+            <orientation>Ti.UI.PORTRAIT</orientation>
+        </orientations>
+    </iphone>
+    <android xmlns:android="http://schemas.android.com/apk/res/android">
+        <manifest android:installLocation="auto">
+            <supports-screens android:anyDensity="false"
+                android:largeScreens="false"
+                android:normalScreens="true" android:smallScreens="true"/>
+        </manifest>
+    </android>
+    <mobileweb>
+        <precache/>
+        <splash>
+            <enabled>true</enabled>
+            <inline-css-images>true</inline-css-images>
+        </splash>
+        <theme>default</theme>
+    </mobileweb>
+    <modules/>
+    <deployment-targets>
+        <target device="android">true</target>
+        <target device="blackberry">false</target>
+        <target device="ipad">false</target>
+        <target device="iphone">true</target>
+        <target device="mobileweb">false</target>
+        <target device="tizen">false</target>
+    </deployment-targets>
+    <sdk-version>3.1.3.GA</sdk-version>
+</ti:app>
