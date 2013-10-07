@@ -1,9 +1,9 @@
 //Application Window Component Constructor
 function ApplicationWindow() {
 	var win = Ti.UI.createWindow({
-		title : "Your vehcle",
 		backgroundColor : '#fff',
-		exitOnClose : true
+		exitOnClose : true,
+		navBarHidden : true
 	});
 	win.openedflag = 0;
 	win.focusedflag = 0;
