@@ -39,12 +39,30 @@ else {
 		Ti.App.addEventListener('app:dataLoaded', function(e){
 			if(Titanium.UI.currentWindow!=null) Titanium.UI.currentWindow.close();
 			var Window = require('ui/handheld/android/ApplicationWindow');
-			new Window().open();
+			var appWindow = new Window();
+			appWindow.open();
+			if(!Ti.App.Properties.hasProperty("mapType"))	
+			{
+				Ti.App.Properties.setBool('mapType', false);
+			}
+			Ti.App.addEventListener('satClick', function(data){
+				if(data.hasCheck)				
+					appWindow.mapView.setMapType(Titanium.Map.SATELLITE_TYPE);
+				else
+					appWindow.mapView.setMapType(Titanium.Map.STANDARD_TYPE);
+			});
 		});
-	} else {
+	} 
+	else {
 		
 		var ApplicationTabGroup = require('ui/common/ApplicationTabGroup');
 		new ApplicationTabGroup().open();
 	}
+	
+	
+
 
 })();
+
+
+	

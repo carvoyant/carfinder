@@ -307,9 +307,11 @@ function ApplicationWindow() {
 	});
 	win.add(navButton);
 
-	return win;
-}
+this.open = function(){win.open();};
+this.mapView = mapView;
 
+	return this;
+}
 Number.prototype.toRad = function() {
 	return this * Math.PI / 180;
 }
@@ -390,3 +392,6 @@ var translateErrorCode = function(code) {
 }
 //make constructor function the public component interface
 module.exports = ApplicationWindow;
+ 
+
+
