@@ -1,7 +1,7 @@
 var DefaultCarWindow = function(){
 	var myfontsize = (Titanium.Platform.displayCaps.platformHeight * 4) / 100;
 	var win = Ti.UI.createWindow({
-		title: "Default Car"
+		title: L('default_car')
 	});
 	if (Ti.Platform.name == 'android') 
 	{
@@ -30,7 +30,7 @@ var DefaultCarWindow = function(){
 	else tableView.setData(tableData);
 	
 	if (Titanium.Platform.osname === 'iphone') {
-			tableView.style=Ti.UI.iPhone.ListViewStyle.PLAIN
+			tableView.style=Ti.UI.iPhone.ListViewStyle.PLAIN;
 		}
 	tableView.addEventListener('click', function(e){
 		if(Ti.App.Properties.hasProperty("defaultVehicle")) {

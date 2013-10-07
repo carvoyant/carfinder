@@ -11,12 +11,24 @@
 
 //bootstrap and check dependencies
 if (Ti.version < 1.8) {
-	alert('Sorry - this application template requires Titanium Mobile SDK 1.8 or later');
+	alert(L('sorry_app_req') + ' Titanium Mobile SDK 1.8 '+ L('or_later'));
 }
 
+
+
+// set units based on locale (America and Burma use Imperial)
+if (Ti.Locale.currentLocale == "en-US" || Ti.Locale.currentLocale == "my-MM") {
+	Ti.App.Properties.setString("unitSystem", "Imperial");
+}
+
+// the rest of the world uses Metric
+else {
+	Ti.App.Properties.setString("unitSystem", "Metric");
+}
+	
 var moment = require('lib/moment');
 
-Ti.Geolocation.purpose = 'Helping you find your car';
+Ti.Geolocation.purpose = L('app_purpose');
 if (Ti.Platform.osname == 'iphone')
 	Titanium.Geolocation.accuracy = Titanium.Geolocation.ACCURACY_BEST_FOR_NAVIGATION;
 else {

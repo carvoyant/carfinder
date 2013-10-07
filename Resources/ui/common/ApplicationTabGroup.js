@@ -5,7 +5,7 @@ function ApplicationTabGroup() {
 	var Window = require('ui/handheld/ApplicationWindow');
 	
 	//create app tabs
-	var ApplicationWin = new Window()
+	var ApplicationWin = new Window();
 	
 	var tab = Ti.UI.createTab({
 		title: L('app_name'),
