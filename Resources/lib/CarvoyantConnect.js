@@ -1,7 +1,7 @@
 function getCarvoyantData(_cb) {
 	var xhr = Titanium.Network.createHTTPClient({
-		username : "bf445b8f-7c54-4173-8423-c59575d7c858",//APIKey,
-		password : "2092622a-7d01-49f6-9257-94cd0a3b27bf" //APIToken
+		username : "",//APIKey,
+		password : "" //APIToken
 	});
 	xhr.onload = function() {
 		_cb(JSON.parse(this.responseText));
