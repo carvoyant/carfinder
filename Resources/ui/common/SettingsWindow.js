@@ -74,9 +74,9 @@ var SettingsWindow = function(containingTab) {
 		data : [firstSection, secondSection]
 	});
 	if (osname === 'iphone') {
-		tableView.style = Ti.UI.iPhone.ListViewStyle.GROUPED
+		tableView.style = Ti.UI.iPhone.ListViewStyle.GROUPED;
 	}
-	win.add(tableView)
+	win.add(tableView);
 
 	// Create a Button.
 	var logoutButton = Ti.UI.createButton({
@@ -87,7 +87,11 @@ var SettingsWindow = function(containingTab) {
 
 	// Listen for click events.
 	logoutButton.addEventListener('click', function() {
-		alert('\'Logout\' was clicked!');
+		Ti.App.Properties.setString('Username', '');
+		Ti.App.Properties.setString('Password', '');
+        Ti.API.info('Removed the Username and Password: ' + Ti.App.Properties.getString('Username') + Ti.App.Properties.getString('Password'));
+		var activity = Titanium.Android.currentActivity;
+        activity.finish();
 	});
 
 	// Add to the parent view.
