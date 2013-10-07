@@ -8,8 +8,8 @@ var createMap = function(_vehicle) {
 	});
 	Titanium.Geolocation.getCurrentPosition(function(e) {
 		if (e.error) {
-			Ti.API.info("Code translation: " + translateErrorCode(e.code));
-			alert('error ' + JSON.stringify(e.error));
+			Ti.API.info(L("code_translation") + translateErrorCode(e.code));
+			alert(L("error") + JSON.stringify(e.error));
 			return;
 		}
 		var region = {
@@ -31,7 +31,7 @@ var createVehiclePin = function(_vehicle) {
 		latitude : _vehicle.waypoint.latitude,
 		longitude : _vehicle.waypoint.longitude,
 		title : _vehicle.title,
-		subtitle : 'Located ' + moment(_vehicle.waypoint.timestamp).fromNow(),
+		subtitle : L('located') + moment(_vehicle.waypoint.timestamp).fromNow(),
 		pincolor : Ti.Map.ANNOTATION_RED,
 		animate : true,
 		leftView : Ti.UI.createImageView({image:(vehicleDataValidity(_vehicle.waypoint.timestamp)),height : mySize,
@@ -46,8 +46,8 @@ var resetPin_Map = function(_map, _vehicle) {
 	var timestamp = new Date(_vehicle.waypoint.timestamp);
 	Titanium.Geolocation.getCurrentPosition(function(e) {
 		if (e.error) {
-			Ti.API.info("Code translation: " + translateErrorCode(e.code));
-			alert('error ' + JSON.stringify(e.error));
+			Ti.API.info(L("code_translation") + translateErrorCode(e.code));
+			alert(L('error') + JSON.stringify(e.error));
 			return;
 		}
 		var region = {
@@ -63,20 +63,20 @@ var resetPin_Map = function(_map, _vehicle) {
 		latitude : _vehicle.waypoint.latitude,
 		longitude : _vehicle.waypoint.longitude,
 		title : _vehicle.title,
-		subtitle : 'Located ' + moment(_vehicle.waypoint.timestamp).fromNow(),
+		subtitle : L('located') + moment(_vehicle.waypoint.timestamp).fromNow(),
 		pincolor : Ti.Map.ANNOTATION_RED,
 		animate : true,
 		leftView : (Ti.UI.createImageView({image:(vehicleDataValidity(_vehicle.waypoint.timestamp)),height : mySize,
 		width : mySize}))
 	})]);
-}
+};
 exports.resetPin_Map = resetPin_Map;
 
 var resetRegion = function(_map, _vehicle) {
 	Titanium.Geolocation.getCurrentPosition(function(e) {
 		if (e.error) {
-			Ti.API.info("Code translation: " + translateErrorCode(e.code));
-			alert('error ' + JSON.stringify(e.error));
+			Ti.API.info(L('code_translation') + translateErrorCode(e.code));
+			alert(L('error') + JSON.stringify(e.error));
 			return;
 		}
 		var region = {
@@ -88,7 +88,7 @@ var resetRegion = function(_map, _vehicle) {
 		};
 		_map.setLocation(region);
 	});
-}
+};
 exports.resetRegion = resetRegion;
 
 function vehicleDataValidity(_date) {
@@ -105,7 +105,7 @@ function vehicleDataValidity(_date) {
 		height : mySize,
 		width : mySize
 	});
-	return statusImage.toBlob()
+	return statusImage.toBlob();
 }
 
 var translateErrorCode = function(code) {
@@ -114,19 +114,19 @@ var translateErrorCode = function(code) {
 	}
 	switch (code) {
 		case Ti.Geolocation.ERROR_LOCATION_UNKNOWN:
-			return "Location unknown";
+			return L('location_unknown');
 		case Ti.Geolocation.ERROR_DENIED:
-			return "Access denied";
+			return L('access_denied');
 		case Ti.Geolocation.ERROR_NETWORK:
-			return "Network error";
+			return L('network_error');
 		case Ti.Geolocation.ERROR_HEADING_FAILURE:
-			return "Failure to detect heading";
+			return L('heading_failure');
 		case Ti.Geolocation.ERROR_REGION_MONITORING_DENIED:
-			return "Region monitoring access denied";
+			return L('region_mon_acc_denied');
 		case Ti.Geolocation.ERROR_REGION_MONITORING_FAILURE:
-			return "Region monitoring access failure";
+			return L('region_mon_acc_failure');
 		case Ti.Geolocation.ERROR_REGION_MONITORING_DELAYED:
-			return "Region monitoring setup delayed";
+			return L('region_mon_setup_delay');
 	}
-}
+};
 exports.translateErrorCode = translateErrorCode;

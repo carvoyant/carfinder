@@ -5,7 +5,7 @@ Ti.Geolocation.headingFilter = HEADING_FILTER_VAL;
 
 var WalkMeWindow = function(_vehicle) {
 	var win = Ti.UI.createWindow({
-		title : "Walking to " + _vehicle.title,
+		title : L("walking_to") + _vehicle.title,
 		navBarHidden : true
 	});
 
@@ -14,7 +14,7 @@ var WalkMeWindow = function(_vehicle) {
 	if (Titanium.Geolocation.locationServicesEnabled === false) {
 		Titanium.UI.createAlertDialog({
 			title : L('app_name'),
-			message : 'Your device has geo turned off - turn it on.'
+			message : L('gps_off')
 		}).show();
 		win.close();
 	} else {
@@ -24,13 +24,13 @@ var WalkMeWindow = function(_vehicle) {
 			if (authorization == Titanium.Geolocation.AUTHORIZATION_DENIED) {
 				Ti.UI.createAlertDialog({
 					title : L('app_name'),
-					message : 'You have disallowed us from running geolocation services.'
+					message : L('geo_disallowed')
 				}).show();
 				win.close();
 			} else if (authorization == Titanium.Geolocation.AUTHORIZATION_RESTRICTED) {
 				Ti.UI.createAlertDialog({
 					title : L('app_name'),
-					message : 'Your system has disallowed us from running geolocation services.'
+					message : L('geo_disallowed')
 				}).show();
 				win.close();
 			}
@@ -98,11 +98,11 @@ var WalkMeWindow = function(_vehicle) {
 			win.add(arrowImg);
 		} else {
 			deviceCompass = false;
-			Titanium.API.info("No Compass on device");
+			Titanium.API.info(L("no_compass"));
 			Ti.UI.createAlertDialog({
 				title : L('app_name'),
-				message : 'Compass was not found on this device. We will not be able to tell you the direction your car is towards.',
-				buttonNames : ['Okay']
+				message : L('no_compass_detailed'),
+				buttonNames : [L('okay')]
 			}).show();
 
 		}
@@ -114,9 +114,9 @@ var WalkMeWindow = function(_vehicle) {
 			distanceLabel.setText(distance(e.coords.latitude, e.coords.longitude, _vehicle.waypoint.latitude, _vehicle.waypoint.longitude));
 			Map.resetRegion(_map, _vehicle);
 			//mapView.setUserLocation(true);
-			Ti.API.info("distance: " + distance(e.coords.latitude, e.coords.longitude, _vehicle.waypoint.latitude, _vehicle.waypoint.longitude));
+			Ti.API.info(L('distance')+": " + distance(e.coords.latitude, e.coords.longitude, _vehicle.waypoint.latitude, _vehicle.waypoint.longitude));
 			userCoords = e.coords;
-			Ti.API.info("user location: " + userCoords.latitude + ", " + userCoords.longitude);
+			Ti.API.info(L('user_location') + ": " + userCoords.latitude + ", " + userCoords.longitude);
 		}
 
 		function headingCallback(e) {
@@ -126,8 +126,8 @@ var WalkMeWindow = function(_vehicle) {
 					//headingLabel.setText("bearing: " + bearing(userCoords.latitude, userCoords.longitude, _vehicle.waypoint.latitude, _vehicle.waypoint.longitude)+", heading: "+e.heading.trueHeading);
 					//a.transform = matrix2d.rotate(e.heading.trueHeading);
 					arrowImg.animate(a);
-					Ti.API.info("bearing: " + bearing(_vehicle.waypoint.latitude, _vehicle.waypoint.longitude, userCoords.latitude, userCoords.longitude));
-					Ti.API.info("heading: " + e.heading.trueHeading);
+					Ti.API.info(L('bearing') + ": " + bearing(_vehicle.waypoint.latitude, _vehicle.waypoint.longitude, userCoords.latitude, userCoords.longitude));
+					Ti.API.info(L('heading') + ": " + e.heading.trueHeading);
 				}
 			}
 		}
@@ -135,8 +135,8 @@ var WalkMeWindow = function(_vehicle) {
 
 		Titanium.Geolocation.addEventListener('location', function(e) {
 			if (e.error) {
-				Ti.API.info("Code translation: " + Map.translateErrorCode(e.code));
-				alert('error ' + JSON.stringify(e.error));
+				Ti.API.info(L('code_translation') + ": "  + Map.translateErrorCode(e.code));
+				alert(L('error') + JSON.stringify(e.error));
 				return;
 			}
 		});
@@ -144,10 +144,10 @@ var WalkMeWindow = function(_vehicle) {
 		win.addEventListener('focus', function() {
 			Ti.API.info("adding location callback on resume");
 			Titanium.Geolocation.addEventListener('location', function(e) {
-				locationCallback(e, _vehicle)
+				locationCallback(e, _vehicle);
 			});
 			Titanium.Geolocation.addEventListener('heading', function(e) {
-				headingCallback(e, _vehicle)
+				headingCallback(e, _vehicle);
 			});
 			_map.setUserLocation(true);
 		});
@@ -155,10 +155,10 @@ var WalkMeWindow = function(_vehicle) {
 			Ti.API.info("pause event received");
 			Ti.API.info("removing location callback on pause");
 			Titanium.Geolocation.removeEventListener('location', function(e) {
-				locationCallback(e, _vehicle)
+				locationCallback(e, _vehicle);
 			});
 			Titanium.Geolocation.removeEventListener('heading', function(e) {
-				headingCallback(e, _vehicle)
+				headingCallback(e, _vehicle);
 			});
 		});
 
@@ -189,9 +189,11 @@ var WalkMeWindow = function(_vehicle) {
 
 	return win;
 };
+
 Number.prototype.toRad = function() {
 	return this * Math.PI / 180;
-}
+};
+
 function distance(lat1, lon1, lat2, lon2) {
 	var unitSystem = Ti.App.Properties.getString("unitSystem");
 	var unit;

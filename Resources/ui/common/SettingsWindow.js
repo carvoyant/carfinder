@@ -15,53 +15,22 @@ var SettingsWindow = function(containingTab) {
 	var secondSection = Ti.UI.createTableViewSection();
 
 	if (osname === 'android') {
-		var firstRow = Ti.UI.createTableViewRow({
-			title : 'Account Info',
+		var myAccountRow = Ti.UI.createTableViewRow({
+			title : 'My Account',
 			height : myfontsize * 2,
 			font : {
 				fontSize : myfontsize
 			}
 		});
-		var secondRow = Ti.UI.createTableViewRow({
-			title : 'Default Car',
+		
+		var satViewRow = Ti.UI.createTableViewRow({
+			title : 'Satelite View',
 			height : myfontsize * 2,
 			font : {
 				fontSize : myfontsize
 			}
 		});
-		var thirdRow = Ti.UI.createTableViewRow({
-			height : myfontsize * 2
-		});
-		var titleLabel = Titanium.UI.createLabel({
-			text : 'Unit',
-			textAlign : 'left',
-			left : 5,
-			font : {
-				fontSize : myfontsize
-			}
-		});
-		var unitLabel = Titanium.UI.createLabel({
-			text : Ti.App.Properties.getString("unitSystem"),
-			textAlign : 'right',
-			right : 5,
-			font : {
-				fontSize : myfontsize
-			}
-		});
-		thirdRow.add(titleLabel);
-		thirdRow.add(unitLabel);
-		thirdRow.addEventListener('click', function() {
-			if(Ti.App.Properties.getString("unitSystem")=="Metric") Ti.App.Properties.setString("unitSystem", "Imperial");
-			else Ti.App.Properties.setString("unitSystem", "Metric");
-			unitLabel.setText(Ti.App.Properties.getString("unitSystem"));
-		});
-		var fourthRow = Ti.UI.createTableViewRow({
-			title : 'About Point to my Car?',
-			height : myfontsize * 2,
-			font : {
-				fontSize : myfontsize
-			}
-		});
+		
 	} else {
 		var firstRow = Ti.UI.createTableViewRow({
 			title : 'Account Info',
@@ -80,29 +49,33 @@ var SettingsWindow = function(containingTab) {
 		});
 	};
 
-	firstSection.add(firstRow);
-	firstSection.add(secondRow);
-	firstSection.add(thirdRow);
-	secondSection.add(fourthRow);
+	satViewRow.hasCheck = true;
+	firstSection.add(myAccountRow);
+	firstSection.add(satViewRow);
 
-	secondRow.addEventListener('click', function() {
-		var DefaultCarWin = require('ui/common/DefaultCarWindow');
-		var defaultCar = new DefaultCarWin();
-		if (Ti.Platform.osname === 'iphone')
-			containingTab.open(new DefaultCarWin());
-		else
-			defaultCar.open({
-				modal : true
-			});
+
+	satViewRow.addEventListener('click', function(e) {
+		e.source.hasCheck = !e.source.hasCheck;
+		Ti.App.fireEvent('testy');
+			Ti.API.info("testddd");
+			
+	});
+
+	
+	
+	myAccountRow.addEventListener('click', function() {
+	 
+	    Titanium.Platform.openURL("http://dash.carvoyant.com"); 
+
 	});
 
 	var tableView = Ti.UI.createTableView({
 		data : [firstSection, secondSection]
 	});
 	if (osname === 'iphone') {
-		tableView.style = Ti.UI.iPhone.ListViewStyle.GROUPED
+		tableView.style = Ti.UI.iPhone.ListViewStyle.GROUPED;
 	}
-	win.add(tableView)
+	win.add(tableView);
 
 	// Create a Button.
 	var logoutButton = Ti.UI.createButton({

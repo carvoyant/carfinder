@@ -22,6 +22,7 @@ function ApplicationWindow() {
 
 	var selectVehicleButton = Titanium.UI.createButton({
 		title : selectedVehicle.title,
+		width: 600,
 		top : 0
 	});
 	selectVehicleButton.addEventListener('click', function() {
@@ -35,9 +36,9 @@ function ApplicationWindow() {
 		}
 		var opts = {
 			options : options,
-			buttonNames : ['Cancel'],
+			buttonNames : [L('cancel')],
 			selectedIndex : selectedVehicleIndex,
-			title : 'Select Vehicle'
+			title : L('select_vehicle')
 		};
 
 		var dialog = Ti.UI.createOptionDialog(opts);
@@ -47,7 +48,7 @@ function ApplicationWindow() {
 				//win.add(vehicleDataValidity(selectedVehicle.waypoint.timestamp))
 				selectedVehicle = vehicleData[_e.index];
 				Map.resetPin_Map(mapView, selectedVehicle);
-				selectVehicleButton.setTitle(selectedVehicle.title)
+				selectVehicleButton.setTitle(selectedVehicle.title);
 				Ti.API.info("Index: " + _e.index);
 			}
 		});
@@ -56,10 +57,11 @@ function ApplicationWindow() {
 	var gearImage = Ti.UI.createImageView({
 		image : '/images/gear.png'
 	});
-	var gearBlob = gearImage.toBlob()
+	var gearBlob = gearImage.toBlob();
 	Ti.API.info(gearBlob);
 	//gearBlob = gearBlob.imageAsResized(selectVehicleButton.getHeight(), selectVehicleButton.getHeight());
 
+/*
 	// Create a Button.
 	var mapStyleButton = Ti.UI.createButton({
 		title : (mapView.getMapType() == Titanium.Map.SATELLITE_TYPE) ? 'Std Map' : 'Sat Map',
@@ -78,13 +80,13 @@ function ApplicationWindow() {
 
 	// Add to the parent view.
 	win.add(mapStyleButton);
-
+*/
 	var settingsButton = Titanium.UI.createButton({
 		image : gearBlob,
 		left : 0,
 		height : selectVehicleButton.getHeight(),
 		width : selectVehicleButton.getHeight(),
-		top : 0
+		bottom : 0
 	});
 	settingsButton.addEventListener('click', function() {
 		var SettingWin = require('ui/common/SettingsWindow');
@@ -101,15 +103,15 @@ function ApplicationWindow() {
 		right : 0,
 		height : selectVehicleButton.getHeight(),
 		width : selectVehicleButton.getHeight(),
-		top : 0
+		bottom : 0
 	});
 	navButton.addEventListener('click', function() {
 		var dialog = Titanium.UI.createAlertDialog({
-			title : 'Directions',
-			message : 'Would you like us to walk you to your car?',
-			buttonNames : ['Yes', 'No, I\'ll drive', 'Cancel'],
+			title : L('directions'),
+			message : L('walk_to_car'),
+			buttonNames : [L('yes'), L('no_i_will_drive'), L('cancel')],
 			cancel : 2
-		})
+		});
 		dialog.addEventListener('click', function(_e) {
 			if (_e.index == 1) {
 				Ti.Geolocation.getCurrentPosition(function(e) {
@@ -217,12 +219,12 @@ function ApplicationWindow() {
 							alert('error ' + JSON.stringify(e.error));
 							return;
 						} else {
-							distanceLabel.setText("Distance: " + distance(e.coords.latitude, e.coords.longitude, selectedVehicle.waypoint.latitude, selectedVehicle.waypoint.longitude));
+							distanceLabel.setText(L('distance') + distance(e.coords.latitude, e.coords.longitude, selectedVehicle.waypoint.latitude, selectedVehicle.waypoint.longitude));
 							//Map.resetRegion(_map, selectedVehicle);
 							//mapView.setUserLocation(true);
-							Ti.API.info("distance: " + distance(e.coords.latitude, e.coords.longitude, selectedVehicle.waypoint.latitude, selectedVehicle.waypoint.longitude));
+							Ti.API.info(L('distance') + distance(e.coords.latitude, e.coords.longitude, selectedVehicle.waypoint.latitude, selectedVehicle.waypoint.longitude));
 							userCoords = e.coords;
-							Ti.API.info("user location: " + userCoords.latitude + ", " + userCoords.longitude);
+							Ti.API.info(L('user_location') + userCoords.latitude + ", " + userCoords.longitude);
 						}
 					}
 
@@ -312,7 +314,7 @@ function ApplicationWindow() {
 
 Number.prototype.toRad = function() {
 	return this * Math.PI / 180;
-}
+};
 function distance(lat1, lon1, lat2, lon2) {
 	var unitSystem = Ti.App.Properties.getString("unitSystem");
 	var unit;
@@ -387,6 +389,6 @@ var translateErrorCode = function(code) {
 		case Ti.Geolocation.ERROR_REGION_MONITORING_DELAYED:
 			return "Region monitoring setup delayed";
 	}
-}
+};
 //make constructor function the public component interface
 module.exports = ApplicationWindow;
