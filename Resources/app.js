@@ -49,20 +49,49 @@ else {
 	// All other platforms follow a similar UI pattern.
 	if (osname === 'android') {
 		Ti.App.addEventListener('app:dataLoaded', function(e){
-			if(Titanium.UI.currentWindow!=null) Titanium.UI.currentWindow.close();
-			var Window = require('ui/handheld/android/ApplicationWindow');
-			var appWindow = new Window();
-			appWindow.open();
-			if(!Ti.App.Properties.hasProperty("mapType"))	
+			// //if(Titanium.UI.currentWindow!=null) Titanium.UI.currentWindow.close();
+			
+			if(!(Ti.App.Properties.hasProperty("Username") && Ti.App.Properties.hasProperty("Password")))
 			{
-				Ti.App.Properties.setBool('mapType', false);
+					
+				Ti.UI.backgroundColor = '#ddd';
+	
+	
+				var forms = require('ui/common/forms');
+				
+				var fields = [
+					{ title:'UserName', type:'text', id:'name' },
+					{ title:'Password', type:'password', id:'password' },
+					{ title:'Remember Me', type:'switch', id:'remember' },
+					{ title:'Login', type:'submit', id:'login' },
+					{ title:'Register', type:'link', id:'register' }
+				];
+				
+				var win = Ti.UI.createWindow();
+				var form = forms.createForm({
+					style: forms.STYLE_LABEL,
+					fields: fields
+				});
+				form.addEventListener('login', function(e) {
+					if(e.values.remember)
+					{
+						Ti.App.Properties.setString('Username', e.values.name);
+						Ti.App.Properties.setString('Password', e.values.password);
+					}
+					OpenMain();
+					
+				});
+				
+				form.addEventListener('register', function(e) {
+					Titanium.Platform.openURL('http://dash.carvoyant.com/register');
+				});
+				win.add(form);
+				
+				win.open();
+				
 			}
-			Ti.App.addEventListener('satClick', function(data){
-				if(data.hasCheck)				
-					appWindow.mapView.setMapType(Titanium.Map.SATELLITE_TYPE);
-				else
-					appWindow.mapView.setMapType(Titanium.Map.STANDARD_TYPE);
-			});
+			else
+				OpenMain();
 		});
 	} 
 	else {
@@ -76,5 +105,20 @@ else {
 
 })();
 
-
+var OpenMain = function()
+{
+	var Window = require('ui/handheld/android/ApplicationWindow');
+	var appWindow = new Window();
+	appWindow.open();
+	if(!Ti.App.Properties.hasProperty("mapType"))	
+	{
+		Ti.App.Properties.setBool('mapType', false);
+	}
+	Ti.App.addEventListener('satClick', function(data){
+		if(data.hasCheck)				
+			appWindow.mapView.setMapType(Titanium.Map.SATELLITE_TYPE);
+		else
+			appWindow.mapView.setMapType(Titanium.Map.STANDARD_TYPE);
+	});
+};
 	

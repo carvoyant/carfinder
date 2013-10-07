@@ -47,6 +47,7 @@ function ApplicationWindow() {
 				mapView.removeAllAnnotations();
 				//win.add(vehicleDataValidity(selectedVehicle.waypoint.timestamp))
 				selectedVehicle = vehicleData[_e.index];
+				Ti.App.Properties.setObject("defaultVehicle", selectedVehicle);
 				Map.resetPin_Map(mapView, selectedVehicle);
 				selectVehicleButton.setTitle(selectedVehicle.title);
 				Ti.API.info("Index: " + _e.index);

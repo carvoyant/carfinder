@@ -24,7 +24,7 @@ var SettingsWindow = function(containingTab) {
 		});
 		
 		var satViewRow = Ti.UI.createTableViewRow({
-			title : 'Satelite View',
+			title : 'Satellite View',
 			height : myfontsize * 2,
 			font : {
 				fontSize : myfontsize
@@ -87,9 +87,9 @@ var SettingsWindow = function(containingTab) {
 
 	// Listen for click events.
 	logoutButton.addEventListener('click', function() {
-		Ti.App.Properties.setString('Username', '');
-		Ti.App.Properties.setString('Password', '');
         Ti.API.info('Removed the Username and Password: ' + Ti.App.Properties.getString('Username') + Ti.App.Properties.getString('Password'));
+		Ti.App.Properties.removeProperty('Username');
+		Ti.App.Properties.removeProperty('Password');
 		var activity = Titanium.Android.currentActivity;
         activity.finish();
 	});

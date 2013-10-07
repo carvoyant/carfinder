@@ -1,7 +1,7 @@
 var mySize = (Titanium.Platform.displayCaps.platformHeight * 15) / 100;
 var createMap = function(_vehicle) {
 	var _map = Ti.Map.createView({
-		mapType : (Ti.Platform.osname === 'iphone') ? Ti.Map.HYBRID_TYPE : Ti.Map.SATELLITE_TYPE,
+		mapType : (Ti.App.Properties.getBool('mapType')) ? Ti.Map.SATELLITE_TYPE : Ti.Map.HYBRID_TYPE,
 		animation : true,
 		regionFit : true,
 		userLocation : true
