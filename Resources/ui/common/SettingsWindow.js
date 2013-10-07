@@ -2,7 +2,7 @@ var SettingsWindow = function(containingTab) {
 	var osname = Titanium.Platform.osname;
 	var myfontsize = (Titanium.Platform.displayCaps.platformHeight * 4) / 100;
 	var win = Ti.UI.createWindow({
-		title : "Settings",
+		title : L('settings'),
 		navBarHidden : false
 	});
 	if (osname == 'android') {
@@ -16,7 +16,7 @@ var SettingsWindow = function(containingTab) {
 
 	if (osname === 'android') {
 		var myAccountRow = Ti.UI.createTableViewRow({
-			title : 'My Account',
+			title : L('account_info'),
 			height : myfontsize * 2,
 			font : {
 				fontSize : myfontsize
@@ -24,7 +24,7 @@ var SettingsWindow = function(containingTab) {
 		});
 		
 		var satViewRow = Ti.UI.createTableViewRow({
-			title : 'Satellite View',
+			title : L('satellite_view'),
 			height : myfontsize * 2,
 			font : {
 				fontSize : myfontsize
@@ -34,11 +34,11 @@ var SettingsWindow = function(containingTab) {
 	} 
 	else {
 		var firstRow = Ti.UI.createTableViewRow({
-			title : 'Account Info',
+			title : L('account_info'),
 			hasChild : true
 		});
 		var secondRow = Ti.UI.createTableViewRow({
-			title : 'Default Car',
+			title : L('default_car'),
 			hasChild : true
 		});
 		var thirdRow = Ti.UI.createTableViewRow({
@@ -101,7 +101,7 @@ var SettingsWindow = function(containingTab) {
 
 		// Create a Button.
 		var Close = Ti.UI.createButton({
-			title : 'Close',
+			title : L('close'),
 			style : Ti.UI.iPhone.SystemButtonStyle.PLAIN
 		});
 
