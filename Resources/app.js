@@ -60,11 +60,11 @@ else {
 				var forms = require('ui/common/forms');
 				
 				var fields = [
-					{ title:'UserName', type:'text', id:'name' },
-					{ title:'Password', type:'password', id:'password' },
-					{ title:'Remember Me', type:'switch', id:'remember' },
-					{ title:'Login', type:'submit', id:'login' },
-					{ title:'Register', type:'link', id:'register' }
+					{ title: L('username'), type:'text', id:'name' },
+					{ title: L('password'), type:'password', id:'password' },
+					{ title: L('remember_me'), type:'switch', id:'remember' },
+					{ title: L('login'), type:'submit', id:'login' },
+					{ title: L('register'), type:'link', id:'register' }
 				];
 				
 				var win = Ti.UI.createWindow();
@@ -77,6 +77,10 @@ else {
 					{
 						Ti.App.Properties.setString('Username', e.values.name);
 						Ti.App.Properties.setString('Password', e.values.password);
+					}
+					else {
+						Ti.App.Username = e.values.name;
+						Ti.App.Password = e.values.password;
 					}
 					OpenMain();
 					
