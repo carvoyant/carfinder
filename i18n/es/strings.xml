@@ -46,4 +46,9 @@
 	<string name="account_info">Tu Cuenta</string>
 	<string name="logout">Salir</string>
 	<string name="close">Cerrar</string>
+	<string name="satellite_view">Vista de satélite</string>
+	<string name="username">Usuario: </string>
+	<string name="password">Contraseña: </string>
+	<string name="remember_me">Recordarme: </string>
+	<string name="register">Registro</string>
 </resources>

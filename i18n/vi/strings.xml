@@ -46,4 +46,9 @@
 	<string name="account_info">Thông tin tài khoản</string>
 	<string name="logout">Đăng xuất</string>
 	<string name="close">Đóng</string>
+	<string name="satellite_view">Xem truyền hình vệ tinh</string>
+	<string name="username">Tên truy nhập: </string>
+	<string name="password">Mật khẩu: </string>
+	<string name="remember_me">Ghi nhớ: </string>
+	<string name="register">Đăng ký</string>
 </resources>
