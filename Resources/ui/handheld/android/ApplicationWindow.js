@@ -14,6 +14,7 @@ function ApplicationWindow() {
 	var selectedVehicle = Ti.App.Properties.getObject("defaultVehicle");
 	var navigationMode = false;
 
+Ti.API.info("makingmap");
 	var Map = require('ui/common/MapView');
 	var mapView = Map.createMap(selectedVehicle);
 	mapView.setAnnotations([Map.createVehiclePin(selectedVehicle)]);

@@ -37,23 +37,25 @@ else {
 		Ti.Android.currentActivity.setRequestedOrientation(Ti.Android.SCREEN_ORIENTATION_PORTRAIT);
 	});
 }
+
+var loginWindow = Ti.UI.createWindow();
+
 // This is a single context application with multiple windows in a stack
 (function() {
+//Ti.App.Properties.removeProperty('Username');
+//Ti.App.Properties.removeProperty('Password');
 	var osname = Ti.Platform.osname;
-	var carvoyantConnect = require('lib/CarvoyantConnect');
-	carvoyantConnect.getVehicles();
 
 	if (!Ti.App.Properties.hasProperty("unitSystem")) Ti.App.Properties.setString("unitSystem", "Imperial");
 
 	// Android usecurrentActivitys platform-specific properties to create windows.
 	// All other platforms follow a similar UI pattern.
 	if (osname === 'android') {
-		Ti.App.addEventListener('app:dataLoaded', function(e){
+		//
 			// //if(Titanium.UI.currentWindow!=null) Titanium.UI.currentWindow.close();
 			
 			if(!(Ti.App.Properties.hasProperty("Username") && Ti.App.Properties.hasProperty("Password")))
 			{
-					
 				Ti.UI.backgroundColor = '#ddd';
 	
 	
@@ -67,36 +69,41 @@ else {
 					{ title: L('register'), type:'link', id:'register' }
 				];
 				
-				var win = Ti.UI.createWindow();
+				//var win = Ti.UI.createWindow();
 				var form = forms.createForm({
 					style: forms.STYLE_LABEL,
 					fields: fields
 				});
 				form.addEventListener('login', function(e) {
 					if(e.values.remember)
-					{
-						Ti.App.Properties.setString('Username', e.values.name);
-						Ti.App.Properties.setString('Password', e.values.password);
-					}
-					else {
-						Ti.App.Username = e.values.name;
-						Ti.App.Password = e.values.password;
-					}
-					OpenMain();
+						Ti.App.remember = true;
+	
+					//Ti.App.Properties.setString('Username', e.values.name);
+					//Ti.App.Properties.setString('Password', e.values.password);
 					
+					Ti.App.Username = e.values.name;
+					Ti.App.Password = e.values.password;
+
+					var carvoyantConnect = require('lib/CarvoyantConnect');
+					carvoyantConnect.getVehicles();
 				});
 				
 				form.addEventListener('register', function(e) {
 					Titanium.Platform.openURL('http://dash.carvoyant.com/register');
 				});
-				win.add(form);
+				loginWindow.add(form);
 				
-				win.open();
+				loginWindow.open();
 				
 			}
 			else
-				OpenMain();
-		});
+			{
+				Ti.App.Username = Ti.App.Properties.getString('Username');
+				Ti.App.Password = Ti.App.Properties.getString('Password');				
+				var carvoyantConnect = require('lib/CarvoyantConnect');
+				carvoyantConnect.getVehicles();
+			}
+
 	} 
 	else {
 		
@@ -109,11 +116,18 @@ else {
 
 })();
 
+Ti.App.addEventListener('app:dataLoaded', function(e){
+	Ti.API.info("makingmap");
+	loginWindow.close();
+	OpenMain();
+});
 var OpenMain = function()
 {
+	Ti.API.info("openwindow");
 	var Window = require('ui/handheld/android/ApplicationWindow');
 	var appWindow = new Window();
 	appWindow.open();
+	Ti.API.info("doneOpening");
 	if(!Ti.App.Properties.hasProperty("mapType"))	
 	{
 		Ti.App.Properties.setBool('mapType', false);
@@ -125,4 +139,3 @@ var OpenMain = function()
 			appWindow.mapView.setMapType(Titanium.Map.STANDARD_TYPE);
 	});
 };
-	
