@@ -6,6 +6,7 @@ function ApplicationWindow() {
 		navBarHidden: true,
 		tabBarHidden: true
 	});
+
 	
 	var vehicleData = Ti.App.Properties.getList("vehicleData");
 	var selectedVehicle = Ti.App.Properties.getObject("defaultVehicle");

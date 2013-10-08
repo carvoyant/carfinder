@@ -11,6 +11,12 @@ var SettingsWindow = function(containingTab) {
 		win.backgroundColor = '#aebcad';
 	}
 
+	win.activity.onPrepareOptionsMenu = function(e){
+
+		win.close();
+	
+	};
+
 	var firstSection = Ti.UI.createTableViewSection();
 	var secondSection = Ti.UI.createTableViewSection();
 

@@ -8,6 +8,15 @@ function ApplicationWindow() {
 	win.openedflag = 0;
 	win.focusedflag = 0;
 
+win.activity.onPrepareOptionsMenu = function(e){
+	var SettingWin = require('ui/common/SettingsWindow');
+	var settings = new SettingWin(win.containingTab);
+	settings.open();
+
+};
+    
+    
+    
 	var uiSize = (Titanium.Platform.displayCaps.platformHeight * 25) / 100;
 
 	var vehicleData = Ti.App.Properties.getList("vehicleData");
