@@ -16,7 +16,7 @@ exports.TYPE_LINK = 'link';
 
 var isAndroid = Ti.Platform.osname === 'android';
 var textFieldDefaults = {
-	height: '40dp',
+	height: 'auto',
 	width: '250dp',
 	top: '10dp',
 	color: '#222',
@@ -114,7 +114,7 @@ var addField = function(field, fieldRefs) {
 	} else if (type === exports.TYPE_SUBMIT) {
 		var button = Ti.UI.createButton({
 			title: title,
-			height: '40dp',
+			height: 'auto',
 			width: '100dp',
 			top:'10dp'
 		});
@@ -171,6 +171,7 @@ var addFields = function(fields, fieldRefs) {
 
 exports.createForm = function(o) {
 	var container = Ti.UI.createView({
+		backgroundColor: '#ddd',
 		layout: 'vertical',
 		height: 'auto'
 	});
@@ -185,7 +186,8 @@ exports.createForm = function(o) {
 		container: container,
 		fieldStyle: o.style || exports.STYLE_HINT,
 		addField: addField,
-		addFields: addFields
+		addFields: addFields,
+
 	});
 
 	form.addFields(o.fields, fieldRefs);

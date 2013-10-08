@@ -56,9 +56,7 @@ var loginWindow = Ti.UI.createWindow();
 			
 			if(!(Ti.App.Properties.hasProperty("Username") && Ti.App.Properties.hasProperty("Password")))
 			{
-				Ti.UI.backgroundColor = '#ddd';
-	
-	
+
 				var forms = require('ui/common/forms');
 				
 				var fields = [
