@@ -33,6 +33,7 @@ var createVehiclePin = function(_vehicle) {
 		title : _vehicle.title,
 		subtitle : L('located') + ' ' + moment(_vehicle.waypoint.timestamp).fromNow(),
 		pincolor : Ti.Map.ANNOTATION_RED,
+		image : vehicleDataValidity(_vehicle.waypoint.timestamp),
 		animate : true,
 		leftView : Ti.UI.createImageView({image:(vehicleDataValidity(_vehicle.waypoint.timestamp)),height : mySize,
 		width : mySize})
@@ -64,6 +65,7 @@ var resetPin_Map = function(_map, _vehicle) {
 		longitude : _vehicle.waypoint.longitude,
 		title : _vehicle.title,
 		subtitle : L('located') + ' ' + moment(_vehicle.waypoint.timestamp).fromNow(),
+		image : vehicleDataValidity(_vehicle.waypoint.timestamp),
 		pincolor : Ti.Map.ANNOTATION_RED,
 		animate : true,
 		leftView : (Ti.UI.createImageView({image:(vehicleDataValidity(_vehicle.waypoint.timestamp)),height : mySize,

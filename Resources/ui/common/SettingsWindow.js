@@ -87,8 +87,12 @@ var SettingsWindow = function(containingTab) {
 	// Create a Button.
 	var logoutButton = Ti.UI.createButton({
 		title : 'Logout',
-		height : Ti.UI.SIZE,
-		color : '#F00'
+		height : 'auto',
+		color : 'black',
+		width : '130',
+		font : {
+			fontSize : myfontsize
+		}
 	});
 
 	// Listen for click events.

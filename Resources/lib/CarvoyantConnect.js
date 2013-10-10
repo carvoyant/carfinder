@@ -4,8 +4,8 @@ exports.getVehicles = function() {
 	Ti.API.info(Ti.App.Username + " " + Ti.App.Password);
 	
 	var xhr = Titanium.Network.createHTTPClient({
-		username : "",
-		password : "",		
+		username : "bf445b8f-7c54-4173-8423-c59575d7c858",
+		password : "2092622a-7d01-49f6-9257-94cd0a3b27bf"		
 		//username : Ti.App.Username,
 		//password : Ti.App.Password
 	});

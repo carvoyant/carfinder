@@ -8,32 +8,30 @@ function ApplicationWindow() {
 	win.openedflag = 0;
 	win.focusedflag = 0;
 
-win.activity.onPrepareOptionsMenu = function(e){
-	var SettingWin = require('ui/common/SettingsWindow');
-	var settings = new SettingWin(win.containingTab);
-	settings.open();
-
-};
-    
-    
-    
-	var uiSize = (Titanium.Platform.displayCaps.platformHeight * 25) / 100;
+	win.activity.onPrepareOptionsMenu = function(e){
+		var SettingWin = require('ui/common/SettingsWindow');
+		var settings = new SettingWin(win.containingTab);
+		settings.open();
+	
+	};
+    var uiSize = (Titanium.Platform.displayCaps.platformHeight * 25) / 100;
 
 	var vehicleData = Ti.App.Properties.getList("vehicleData");
 	var selectedVehicle = Ti.App.Properties.getObject("defaultVehicle");
 	var navigationMode = false;
 
-Ti.API.info("makingmap");
 	var Map = require('ui/common/MapView');
 	var mapView = Map.createMap(selectedVehicle);
 	mapView.setAnnotations([Map.createVehiclePin(selectedVehicle)]);
 	// mapView.setUserLocation(false);
+
 	win.add(mapView);
 
 	var selectVehicleButton = Titanium.UI.createButton({
 		title : selectedVehicle.title,
-		width: 600,
-		top : 0
+		width: '100%',
+		top : 0,
+		height :"auto"
 	});
 	selectVehicleButton.addEventListener('click', function() {
 		Ti.API.info("timestamp: " + selectedVehicle.waypoint.timestamp.toLocaleString());
@@ -70,28 +68,7 @@ Ti.API.info("makingmap");
 	});
 	var gearBlob = gearImage.toBlob();
 	Ti.API.info(gearBlob);
-	//gearBlob = gearBlob.imageAsResized(selectVehicleButton.getHeight(), selectVehicleButton.getHeight());
 
-/*
-	// Create a Button.
-	var mapStyleButton = Ti.UI.createButton({
-		title : (mapView.getMapType() == Titanium.Map.SATELLITE_TYPE) ? 'Std Map' : 'Sat Map',
-		bottom : 0,
-		right : 0
-	});
-
-	// Listen for click events.
-	mapStyleButton.addEventListener('click', function() {
-		if (mapView.getMapType() == Titanium.Map.SATELLITE_TYPE)
-			mapView.setMapType(Titanium.Map.STANDARD_TYPE)
-		else
-			mapView.setMapType(Titanium.Map.SATELLITE_TYPE);
-		mapStyleButton.setTitle((mapView.getMapType() == Titanium.Map.SATELLITE_TYPE) ? 'Std Map' : 'Sat Map')
-	});
-
-	// Add to the parent view.
-	win.add(mapStyleButton);
-*/
 	var settingsButton = Titanium.UI.createButton({
 		image : gearBlob,
 		left : 0,
@@ -116,218 +93,248 @@ Ti.API.info("makingmap");
 		width : selectVehicleButton.getHeight(),
 		bottom : 0
 	});
+	
+	var signImg;
+
+	var arrowImg;
+	
+	var distanceLabel = Ti.UI.createLabel({
+		color : '#FFF',
+		backgroundColor : 'black',
+		font : {
+			fontSize : 24
+		},
+		textAlign : Ti.UI.TEXT_ALIGNMENT_LEFT,
+		top : 0,
+		left : 0,
+		width : Titanium.Platform.displayCaps.platformWidth,
+		height : Ti.UI.SIZE
+	});
+	var a = Ti.UI.createAnimation();
+	var deviceCompass = false;
+	var matrix2d = Ti.UI.create2DMatrix();
+	
+	function locationCallback(e) {
+		if (e.error) {
+			Ti.API.info("Code translation: " + Map.translateErrorCode(e.code));
+			alert('error ' + JSON.stringify(e.error));
+			return;
+		} else {
+			distanceLabel.setText(L('distance') + distance(e.coords.latitude, e.coords.longitude, selectedVehicle.waypoint.latitude, selectedVehicle.waypoint.longitude));
+			//Map.resetRegion(_map, selectedVehicle);
+			//mapView.setUserLocation(true);
+			//Ti.API.info(L('distance') + distance(e.coords.latitude, e.coords.longitude, selectedVehicle.waypoint.latitude, selectedVehicle.waypoint.longitude));
+			userCoords = e.coords;
+			//Ti.API.info(L('user_location') + userCoords.latitude + ", " + userCoords.longitude);
+		}
+	}
+
+	function headingCallback(e) {
+		if (deviceCompass) {
+			if (userCoords != null) {
+				a.transform = matrix2d.rotate(bearing(userCoords.latitude, userCoords.longitude, selectedVehicle.waypoint.latitude, selectedVehicle.waypoint.longitude) - +e.heading.trueHeading);
+				//headingLabel.setText("bearing: " + bearing(userCoords.latitude, userCoords.longitude, selectedVehicle.waypoint.latitude, selectedVehicle.waypoint.longitude)+", heading: "+e.heading.trueHeading);
+				//a.transform = matrix2d.rotate(e.heading.trueHeading);
+				arrowImg.animate(a);
+				//Ti.API.info("bearing: " + bearing(selectedVehicle.waypoint.latitude, selectedVehicle.waypoint.longitude, userCoords.latitude, userCoords.longitude));
+				//Ti.API.info("heading: " + e.heading.trueHeading);
+			}
+		}
+	}
+	
+	function exitNavigationMode(e) {
+		navButton.setImage('/images/arrowhead_left.png');
+
+		//e.cancelBubble = true;
+		//win.remove(distanceLabel);
+		Ti.API.info("exit navigation received");
+		win.remove(signImg);
+		win.remove(arrowImg);
+		Ti.API.info("removing location callback");
+		Titanium.Geolocation.removeEventListener('location', locationCallback);
+		Titanium.Geolocation.removeEventListener('heading', headingCallback);
+		navigationMode = false;
+		win.removeEventListener('androidback', exitNavigationMode);
+	}
+	
+	function layoutComplete(e) {
+		arrowImg.setTop(signImg.rect.y + signImg.rect.height/4);
+		arrowImg.setRight(Titanium.Platform.displayCaps.platformWidth - signImg.rect.x - signImg.rect.width/2 - arrowImg.rect.width/2);
+		win.add(arrowImg);
+		win.removeEventListener('postlayout', layoutComplete);
+	}
+	
 	navButton.addEventListener('click', function() {
-		var dialog = Titanium.UI.createAlertDialog({
-			title : L('directions'),
-			message : L('walk_to_car'),
-			buttonNames : [L('yes'), L('no_i_will_drive'), L('cancel')],
-			cancel : 2
-		});
-		dialog.addEventListener('click', function(_e) {
-			if (_e.index == 1) {
-				Ti.Geolocation.getCurrentPosition(function(e) {
-					if (e.error) {
-						Ti.API.info("Code translation: " + translateErrorCode(e.code));
-						alert('error ' + JSON.stringify(e.error));
-						return;
-					} else {
-						Ti.Platform.openURL('http://maps.google.com/maps?t=m&saddr=' + e.coords.latitude + "," + e.coords.longitude + '&daddr=' + selectedVehicle.waypoint.latitude + "," + selectedVehicle.waypoint.longitude);
-					}
-				});
-			} else if (_e.index == 0) {
-				if (Titanium.Geolocation.locationServicesEnabled === false) {
-					Titanium.UI.createAlertDialog({
-						title : L('app_name'),
-						message : 'Your device has geo turned off - turn it on.'
-					}).show();
-				} else {
-					if (Titanium.Platform.name != 'android') {
-						if (win.openedflag == 0) {
-							Ti.API.info('firing open event');
-							win.fireEvent('open');
-						}
-						if (win.focusedflag == 0) {
-							Ti.API.info('firing focus event');
-							win.fireEvent('focus');
-						}
-						var authorization = Titanium.Geolocation.locationServicesAuthorization;
-						Ti.API.info('Authorization: ' + authorization);
-						if (authorization == Titanium.Geolocation.AUTHORIZATION_DENIED) {
-							Ti.UI.createAlertDialog({
-								title : L('app_name'),
-								message : 'You have disallowed us from running geolocation services.'
-							}).show();
-						} else if (authorization == Titanium.Geolocation.AUTHORIZATION_RESTRICTED) {
-							Ti.UI.createAlertDialog({
-								title : L('app_name'),
-								message : 'Your system has disallowed us from running geolocation services.'
-							}).show();
-						}
-					}
-					win.remove(settingsButton);
-					win.remove(selectVehicleButton);
-					win.remove(navButton);
-					navigationMode = true;
-					var distanceLabel = Ti.UI.createLabel({
-						color : '#FFF',
-						backgroundColor : 'black',
-						font : {
-							fontSize : 24
-						},
-						textAlign : Ti.UI.TEXT_ALIGNMENT_LEFT,
-						top : 0,
-						left : 0,
-						width : Titanium.Platform.displayCaps.platformWidth,
-						height : Ti.UI.SIZE
-					});
-					win.add(distanceLabel);
-					var deviceCompass = false;
-					if (Titanium.Geolocation.hasCompass) {
-						deviceCompass = true;
-						var signImg = Ti.UI.createImageView({
-							image : '/images/yellow-sign.png',
-							height : uiSize,
-							width : uiSize,
-							center : {
-								x : Titanium.Platform.displayCaps.platformWidth - ((uiSize / 2) + 5),
-								y : uiSize / 2 + 10
-							},
-						});
-						var arrowImg = Titanium.UI.createImageView({
-							image : '/images/arrow.png',
-							backgroundColor : 'transparent',
-							anchorPoint : {
-								x : 0.5,
-								y : 0.5
-							},
-							center : signImg.getCenter(),
-							height : uiSize / 2,
-							width : uiSize / 2
-						});
 
-						// Spin the image
-						var matrix2d = Ti.UI.create2DMatrix();
-						var a = Ti.UI.createAnimation();
-						win.add(signImg);
-						win.add(arrowImg);
-					} else {
-						deviceCompass = false;
-						Titanium.API.info("No Compass on device");
-						Ti.UI.createAlertDialog({
-							title : L('app_name'),
-							message : 'Compass was not found on this device. We will not be able to tell you the direction your car is towards.',
-							buttonNames : ['Okay']
-						}).show();
-
-					}
-
-					var userCoords;
-					var previousDistance, previousHeading;
-
-					function locationCallback(e) {
+		if(navigationMode)
+		{
+			exitNavigationMode(null);
+		}
+		else
+		{
+			var dialog = Titanium.UI.createAlertDialog({
+				title : L('directions'),
+				message : L('walk_to_car'),
+				buttonNames : [L('yes'), L('no_i_will_drive'), L('cancel')],
+				cancel : 2
+			});
+			dialog.addEventListener('click', function(_e) {
+				if (_e.index == 1) {
+					Ti.Geolocation.getCurrentPosition(function(e) {
 						if (e.error) {
-							Ti.API.info("Code translation: " + Map.translateErrorCode(e.code));
+							Ti.API.info("Code translation: " + translateErrorCode(e.code));
 							alert('error ' + JSON.stringify(e.error));
 							return;
 						} else {
-							distanceLabel.setText(L('distance') + distance(e.coords.latitude, e.coords.longitude, selectedVehicle.waypoint.latitude, selectedVehicle.waypoint.longitude));
-							//Map.resetRegion(_map, selectedVehicle);
-							//mapView.setUserLocation(true);
-							Ti.API.info(L('distance') + distance(e.coords.latitude, e.coords.longitude, selectedVehicle.waypoint.latitude, selectedVehicle.waypoint.longitude));
-							userCoords = e.coords;
-							Ti.API.info(L('user_location') + userCoords.latitude + ", " + userCoords.longitude);
+							Ti.Platform.openURL('http://maps.google.com/maps?t=m&saddr=' + e.coords.latitude + "," + e.coords.longitude + '&daddr=' + selectedVehicle.waypoint.latitude + "," + selectedVehicle.waypoint.longitude);
 						}
-					}
-
-					function headingCallback(e) {
-						if (deviceCompass) {
-							if (userCoords != null) {
-								a.transform = matrix2d.rotate(bearing(userCoords.latitude, userCoords.longitude, selectedVehicle.waypoint.latitude, selectedVehicle.waypoint.longitude) - +e.heading.trueHeading);
-								//headingLabel.setText("bearing: " + bearing(userCoords.latitude, userCoords.longitude, selectedVehicle.waypoint.latitude, selectedVehicle.waypoint.longitude)+", heading: "+e.heading.trueHeading);
-								//a.transform = matrix2d.rotate(e.heading.trueHeading);
-								arrowImg.animate(a);
-								Ti.API.info("bearing: " + bearing(selectedVehicle.waypoint.latitude, selectedVehicle.waypoint.longitude, userCoords.latitude, userCoords.longitude));
-								Ti.API.info("heading: " + e.heading.trueHeading);
+					});
+				} 
+				else if (_e.index == 0) {
+					if (Titanium.Geolocation.locationServicesEnabled === false) {
+						Titanium.UI.createAlertDialog({
+							title : L('app_name'),
+							message : 'Your device has geo turned off - turn it on.'
+						}).show();
+					} 
+					else {
+						if (Titanium.Platform.name != 'android') {
+							if (win.openedflag == 0) {
+								Ti.API.info('firing open event');
+								win.fireEvent('open');
+							}
+							if (win.focusedflag == 0) {
+								Ti.API.info('firing focus event');
+								win.fireEvent('focus');
+							}
+							var authorization = Titanium.Geolocation.locationServicesAuthorization;
+							Ti.API.info('Authorization: ' + authorization);
+							if (authorization == Titanium.Geolocation.AUTHORIZATION_DENIED) {
+								Ti.UI.createAlertDialog({
+									title : L('app_name'),
+									message : 'You have disallowed us from running geolocation services.'
+								}).show();
+							} else if (authorization == Titanium.Geolocation.AUTHORIZATION_RESTRICTED) {
+								Ti.UI.createAlertDialog({
+									title : L('app_name'),
+									message : 'Your system has disallowed us from running geolocation services.'
+								}).show();
 							}
 						}
-					}
+	
+						navigationMode = true;
+	
+						//win.add(distanceLabel);
+			
+						if (Titanium.Geolocation.hasCompass) {
+							deviceCompass = true;
+		
+							navButton.setImage('/images/nav_pressed.png');
 
-
-					Titanium.Geolocation.addEventListener('location', locationCallback);
-					Titanium.Geolocation.addEventListener('heading', headingCallback);
-
-					win.addEventListener('focus', function() {
-						win.focusedflag = 1;
-						if (navigationMode == true) {
-							Ti.API.info("focus event received");
-							Ti.API.info("adding location callback on focus");
+							
+							signImg = Ti.UI.createImageView({
+								image : '/images/yellow-sign.png',
+								height : uiSize,
+								width : uiSize,
+								top : selectVehicleButton.size.height + 10,
+								right : 10
+							});
+							
+							arrowImg = Titanium.UI.createImageView({
+								image : '/images/arrow.png',
+								backgroundColor : 'transparent',
+								anchorPoint : {
+									x : 0.5,
+									y : 0.5
+								},
+								height : uiSize / 2,
+								width : uiSize / 2
+							});
+							win.add(signImg);
+							win.add(arrowImg);
+							arrowImg.hide();
+	
+							var userCoords;
+							var previousDistance, previousHeading;
+		
+		
+		
+		
 							Titanium.Geolocation.addEventListener('location', locationCallback);
 							Titanium.Geolocation.addEventListener('heading', headingCallback);
-						}
-					});
-					win.addEventListener('blur', function() {
-						win.focusedflag = 0;
-						Ti.API.info("blur event received");
-						Ti.API.info("removing location callback on pause");
-						Titanium.Geolocation.removeEventListener('location', locationCallback);
-						Titanium.Geolocation.removeEventListener('heading', headingCallback);
-					});
-					Ti.Android.currentActivity.addEventListener('resume', function() {
-						if (navigationMode == true) {
-							Ti.API.info("resume event received");
-							Ti.API.info("adding location callback on resume");
-							Titanium.Geolocation.addEventListener('location', locationCallback);
-							Titanium.Geolocation.addEventListener('heading', headingCallback);
-						}
-					});
-					Ti.Android.currentActivity.addEventListener('pause', function() {
-						Ti.API.info("pause event received");
-						Ti.API.info("removing location callback on close");
-						Titanium.Geolocation.removeEventListener('location', locationCallback);
-						Titanium.Geolocation.removeEventListener('heading', headingCallback);
-					});
-					Ti.Android.currentActivity.addEventListener('stop', function() {
-						Ti.API.info("stop event received");
-						Ti.API.info("removing location callback on stop");
-						Ti.API.info("currentActivity: " + JSON.stringify(Ti.Android.currentActivity));
-						Titanium.Geolocation.removeEventListener('location', locationCallback);
-						Titanium.Geolocation.removeEventListener('heading', headingCallback);
-					});
+							
+							win.addEventListener('postlayout', layoutComplete);
 
-					win.addEventListener('androidback', exitNavigationMode);
-
-					function exitNavigationMode(e) {
-						e.cancelBubble = true;
-						win.remove(distanceLabel);
-						win.remove(signImg);
-						win.remove(arrowImg);
-						Ti.API.info("exit navigation received");
-						Ti.API.info("removing location callback");
-						Titanium.Geolocation.removeEventListener('location', locationCallback);
-						Titanium.Geolocation.removeEventListener('heading', headingCallback);
-						navigationMode = false;
-						win.add(settingsButton);
-						win.add(selectVehicleButton);
-						win.add(navButton);
-						win.removeEventListener('androidback', exitNavigationMode);
+							win.addEventListener('focus', function() {
+								win.focusedflag = 1;
+								if (navigationMode == true) {
+									Ti.API.info("focus event received");
+									Ti.API.info("adding location callback on focus");
+									Titanium.Geolocation.addEventListener('location', locationCallback);
+									Titanium.Geolocation.addEventListener('heading', headingCallback);
+								}
+							});
+							win.addEventListener('blur', function() {
+								win.focusedflag = 0;
+								Ti.API.info("blur event received");
+								Ti.API.info("removing location callback on pause");
+								Titanium.Geolocation.removeEventListener('location', locationCallback);
+								Titanium.Geolocation.removeEventListener('heading', headingCallback);
+							});
+							Ti.Android.currentActivity.addEventListener('resume', function() {
+								if (navigationMode == true) {
+									Ti.API.info("resume event received");
+									Ti.API.info("adding location callback on resume");
+									Titanium.Geolocation.addEventListener('location', locationCallback);
+									Titanium.Geolocation.addEventListener('heading', headingCallback);
+								}
+							});
+							Ti.Android.currentActivity.addEventListener('pause', function() {
+								Ti.API.info("pause event received");
+								Ti.API.info("removing location callback on close");
+								Titanium.Geolocation.removeEventListener('location', locationCallback);
+								Titanium.Geolocation.removeEventListener('heading', headingCallback);
+							});
+							Ti.Android.currentActivity.addEventListener('stop', function() {
+								Ti.API.info("stop event received");
+								Ti.API.info("removing location callback on stop");
+								Ti.API.info("currentActivity: " + JSON.stringify(Ti.Android.currentActivity));
+								Titanium.Geolocation.removeEventListener('location', locationCallback);
+								Titanium.Geolocation.removeEventListener('heading', headingCallback);
+							});
+		
+							win.addEventListener('androidback', exitNavigationMode);
+	
+						}
+						else {
+							deviceCompass = false;
+							Titanium.API.info("No Compass on device");
+							Ti.UI.createAlertDialog({
+								title : L('app_name'),
+								message : 'Compass was not found on this device. We will not be able to tell you the direction your car is towards.',
+								buttonNames : ['Okay']
+							}).show();
+	
+						}
 					}
-
+	
 				}
-
-			}
-		});
-		dialog.show();
+			});
+			dialog.show();
+		}
 	});
 	win.add(navButton);
 
-this.open = function(){win.open();};
-this.mapView = mapView;
+	this.open = function(){win.open();};
+	this.mapView = mapView;
 
 	return this;
 }
+
 Number.prototype.toRad = function() {
 	return this * Math.PI / 180;
 };
+
 function distance(lat1, lon1, lat2, lon2) {
 	var unitSystem = Ti.App.Properties.getString("unitSystem");
 	var unit;
@@ -366,7 +373,7 @@ function distance(lat1, lon1, lat2, lon2) {
 	}
 	;// miles
 
-	Ti.API.info("distance: " + dist + " " + unit);
+	//Ti.API.info("distance: " + dist + " " + unit);
 
 	return String(dist.toFixed(2) + " " + unit);
 }
