@@ -42,7 +42,8 @@
 	<string name="geo_disallowed_sys">Your system has disallowed us from running geolocation services.</string>
 	<string name="focus_event_received">focus event received</string>
 	<string name="adding_location_callback_on_focus">adding location callback on focus</string>
-	<string name="settings">Settings</string>
+	<string name="settings">Settings</string>	<string name="login">Login</string>
+	<string name="login_failure">Unable to login.  Please Try again.</string>
 	<string name="account_info">Account Info</string>
 	<string name="logout">Logout</string>
 	<string name="close">Close</string>
@@ -51,4 +52,6 @@
 	<string name="password">Password: </string>
 	<string name="remember_me">Remember Me: </string>
 	<string name="register">Register</string>
+	<string name="login">Connexion</string>
+	<string name="login_failure">Impossible de se connecter. S'il vous plaît essayer de nouveau.</string>
 </resources>

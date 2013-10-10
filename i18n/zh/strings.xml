@@ -51,4 +51,6 @@
 	<string name="password">密码: </string>
 	<string name="remember_me">记住: </string>
 	<string name="register">注册</string>
+	<string name="login">注册</string>
+	<string name="login_failure">无法登录。请再试一次。</string>
 </resources>

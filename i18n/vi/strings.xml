@@ -51,4 +51,6 @@
 	<string name="password">Mật khẩu: </string>
 	<string name="remember_me">Ghi nhớ: </string>
 	<string name="register">Đăng ký</string>
+	<string name="login">Đăng nhập</string>
+	<string name="login_failure">Không thể đăng nhập. Hãy thử một lần nữa.</string>
 </resources>

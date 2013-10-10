@@ -51,4 +51,6 @@
 	<string name="password">Contraseña: </string>
 	<string name="remember_me">Recordarme: </string>
 	<string name="register">Registro</string>
+	<string name="login">Login</string>
+	<string name="login_failure">No se puede acceder. Inténtalo de nuevo.</string>
 </resources>
