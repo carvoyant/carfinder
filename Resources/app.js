@@ -44,6 +44,7 @@ var loginWindow = Ti.UI.createWindow();
 (function() {
 //Ti.App.Properties.removeProperty('Username');
 //Ti.App.Properties.removeProperty('Password');
+
 	var osname = Ti.Platform.osname;
 
 	if (!Ti.App.Properties.hasProperty("unitSystem")) Ti.App.Properties.setString("unitSystem", "Imperial");
@@ -109,9 +110,6 @@ var loginWindow = Ti.UI.createWindow();
 		new ApplicationTabGroup().open();
 	}
 	
-	
-
-
 })();
 
 Ti.App.addEventListener('app:dataLoaded', function(e){
