@@ -14,7 +14,7 @@ function ApplicationWindow() {
 		settings.open();
 	
 	};
-    var uiSize = (Titanium.Platform.displayCaps.platformHeight * 25) / 100;
+    var uiSize = (Titanium.Platform.displayCaps.platformHeight) / 6;
 
 	var vehicleData = Ti.App.Properties.getList("vehicleData");
 	var selectedVehicle = Ti.App.Properties.getObject("defaultVehicle");
@@ -29,8 +29,8 @@ function ApplicationWindow() {
 
 	var selectVehicleButton = Titanium.UI.createButton({
 		title : selectedVehicle.title,
-		width: '100%',
-		top : 0,
+		width: Titanium.Platform.displayCaps.platformWidth - 20,
+		top : 10,
 		height :"auto"
 	});
 	selectVehicleButton.addEventListener('click', function() {
@@ -98,18 +98,8 @@ function ApplicationWindow() {
 
 	var arrowImg;
 	
-	var distanceLabel = Ti.UI.createLabel({
-		color : '#FFF',
-		backgroundColor : 'black',
-		font : {
-			fontSize : 24
-		},
-		textAlign : Ti.UI.TEXT_ALIGNMENT_LEFT,
-		top : 0,
-		left : 0,
-		width : Titanium.Platform.displayCaps.platformWidth,
-		height : Ti.UI.SIZE
-	});
+	var distanceLabel;
+	
 	var a = Ti.UI.createAnimation();
 	var deviceCompass = false;
 	var matrix2d = Ti.UI.create2DMatrix();
@@ -120,7 +110,7 @@ function ApplicationWindow() {
 			alert('error ' + JSON.stringify(e.error));
 			return;
 		} else {
-			distanceLabel.setText(L('distance') + distance(e.coords.latitude, e.coords.longitude, selectedVehicle.waypoint.latitude, selectedVehicle.waypoint.longitude));
+			distanceLabel.setText(distance(e.coords.latitude, e.coords.longitude, selectedVehicle.waypoint.latitude, selectedVehicle.waypoint.longitude));
 			//Map.resetRegion(_map, selectedVehicle);
 			//mapView.setUserLocation(true);
 			//Ti.API.info(L('distance') + distance(e.coords.latitude, e.coords.longitude, selectedVehicle.waypoint.latitude, selectedVehicle.waypoint.longitude));
@@ -146,7 +136,7 @@ function ApplicationWindow() {
 		navButton.setImage('/images/arrowhead_left.png');
 
 		//e.cancelBubble = true;
-		//win.remove(distanceLabel);
+		win.remove(distanceLabel);
 		Ti.API.info("exit navigation received");
 		win.remove(signImg);
 		win.remove(arrowImg);
@@ -160,7 +150,10 @@ function ApplicationWindow() {
 	function layoutComplete(e) {
 		arrowImg.setTop(signImg.rect.y + signImg.rect.height/4);
 		arrowImg.setRight(Titanium.Platform.displayCaps.platformWidth - signImg.rect.x - signImg.rect.width/2 - arrowImg.rect.width/2);
+		distanceLabel.setTop(signImg.rect.y + signImg.rect.height+5);
+		distanceLabel.setRight(signImg.getRight());
 		win.add(arrowImg);
+		win.add(distanceLabel);
 		win.removeEventListener('postlayout', layoutComplete);
 	}
 	
@@ -224,7 +217,7 @@ function ApplicationWindow() {
 	
 						navigationMode = true;
 	
-						//win.add(distanceLabel);
+
 			
 						if (Titanium.Geolocation.hasCompass) {
 							deviceCompass = true;
@@ -250,6 +243,18 @@ function ApplicationWindow() {
 								height : uiSize / 2,
 								width : uiSize / 2
 							});
+							
+							distanceLabel = Ti.UI.createLabel({
+								backgroundImage : '/images/distance_sign.png',
+								font : {
+									fontSize : 20
+								},
+								color : 'black',
+								textAlign : Ti.UI.TEXT_ALIGNMENT_CENTER,
+								width : uiSize,
+								height : 40
+							});
+							
 							win.add(signImg);
 							win.add(arrowImg);
 							arrowImg.hide();
