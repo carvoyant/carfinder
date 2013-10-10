@@ -22,7 +22,7 @@
 	<string name="code_translation">Code translation</string>
 	<string name="error">error</string>
 	<string name="located">Located </string>
-	<string name="location_unknown">Location unknown</string>
+	<string name="location_unknown">Locat。ion unknown</string>
 	<string name="access_denied">Access denied</string>
 	<string name="network_error">Network error</string>
 	<string name="heading_failure">Failure to detect heading</string>
@@ -38,7 +38,7 @@
 	<string name="fire_open_event">firing open event</string>
 	<string name="firing_focus_event">firing focus event</string>
 	<string name="authorization">Authorization: </string>
-	<string name="geo_disallowed">You have disallowed us from running geolocation services.</string>
+	<string name="geo_disallowed">You have dis。allowed us from running geolocation services.</string>
 	<string name="geo_disallowed_sys">Your system has disallowed us from running geolocation services.</string>
 	<string name="focus_event_received">focus event received</string>
 	<string name="adding_location_callback_on_focus">adding location callback on focus</string>
