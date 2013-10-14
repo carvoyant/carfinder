@@ -42,8 +42,6 @@ var loginWindow = Ti.UI.createWindow();
 
 // This is a single context application with multiple windows in a stack
 (function() {
-//Ti.App.Properties.removeProperty('Username');
-//Ti.App.Properties.removeProperty('Password');
 
 	var osname = Ti.Platform.osname;
 
@@ -52,8 +50,6 @@ var loginWindow = Ti.UI.createWindow();
 	// Android usecurrentActivitys platform-specific properties to create windows.
 	// All other platforms follow a similar UI pattern.
 	if (osname === 'android') {
-		//
-			// //if(Titanium.UI.currentWindow!=null) Titanium.UI.currentWindow.close();
 			
 			if(!(Ti.App.Properties.hasProperty("Username") && Ti.App.Properties.hasProperty("Password")))
 			{
@@ -61,6 +57,7 @@ var loginWindow = Ti.UI.createWindow();
 				var forms = require('ui/common/forms');
 				
 				var fields = [
+					{ title: "loginLogo", type:'image', id:'/images/loginLogo.png' },
 					{ title: L('username'), type:'text', id:'name' },
 					{ title: L('password'), type:'password', id:'password' },
 					{ title: L('remember_me'), type:'switch', id:'remember' },
@@ -68,17 +65,15 @@ var loginWindow = Ti.UI.createWindow();
 					{ title: L('register'), type:'link', id:'register' }
 				];
 				
-				//var win = Ti.UI.createWindow();
 				var form = forms.createForm({
 					style: forms.STYLE_LABEL,
 					fields: fields
 				});
+				
 				form.addEventListener('login', function(e) {
 					if(e.values.remember)
 						Ti.App.remember = true;
 	
-					//Ti.App.Properties.setString('Username', e.values.name);
-					//Ti.App.Properties.setString('Password', e.values.password);
 					
 					Ti.App.Username = e.values.name;
 					Ti.App.Password = e.values.password;
@@ -113,17 +108,12 @@ var loginWindow = Ti.UI.createWindow();
 })();
 
 Ti.App.addEventListener('app:dataLoaded', function(e){
-	Ti.API.info("makingmap");
+	
 	loginWindow.close();
-	OpenMain();
-});
-var OpenMain = function()
-{
-	Ti.API.info("openwindow");
+
 	var Window = require('ui/handheld/android/ApplicationWindow');
 	var appWindow = new Window();
 	appWindow.open();
-	Ti.API.info("doneOpening");
 	if(!Ti.App.Properties.hasProperty("mapType"))	
 	{
 		Ti.App.Properties.setBool('mapType', false);
@@ -134,4 +124,4 @@ var OpenMain = function()
 		else
 			appWindow.mapView.setMapType(Titanium.Map.STANDARD_TYPE);
 	});
-};
+});

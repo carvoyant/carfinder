@@ -1,22 +1,18 @@
 exports.getVehicles = function() {
 	var data = [];
-	Ti.API.info("getCarvoyantData");
-	Ti.API.info(Ti.App.Username + " " + Ti.App.Password);
 	
 	var xhr = Titanium.Network.createHTTPClient({
-		username : "bf445b8f-7c54-4173-8423-c59575d7c858",
-		password : "2092622a-7d01-49f6-9257-94cd0a3b27bf"		
-		//username : Ti.App.Username,
-		//password : Ti.App.Password
+		username : Ti.App.Username,
+		password : Ti.App.Password
 	});
 	
 	xhr.onload = function(e) {
 		var response = JSON.parse(this.responseText);
+
 		if(Ti.App.remember)
 		{
 			Ti.App.Properties.setString('Username', Ti.App.Username);
 			Ti.App.Properties.setString('Password', Ti.App.Password);
-			Ti.API.info(Ti.App.Properties.getString('Username') + Ti.App.Properties.getString('Password'))
 						
 		}
 		SuccessfulLogin(response);
@@ -32,8 +28,14 @@ exports.getVehicles = function() {
 
 function SuccessfulLogin(_data)
 {
-		var data = [];
-		Ti.API.info("successful");
+	if(_data.vehicle[0].lastWaypoint==null)
+	{
+		alert("No vehicle data found");	
+		return;
+	}
+		
+	var data = [];
+
 	for (var i = 0; i < _data.vehicle.length; i++) {
 		data.push({
 			title : _data.vehicle[i].name,

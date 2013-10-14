@@ -13,6 +13,7 @@ exports.TYPE_TEXT = 'text';
 exports.TYPE_SUBMIT = 'submit';
 exports.TYPE_SWITCH = 'switch';
 exports.TYPE_LINK = 'link';
+exports.TYPE_IMAGE = 'image';
 
 var isAndroid = Ti.Platform.osname === 'android';
 var textFieldDefaults = {
@@ -155,6 +156,13 @@ var addField = function(field, fieldRefs) {
 			form.fireEvent(id, {values:values});
 		});
 	}
+	else if (type === exports.TYPE_IMAGE)
+	{
+		fieldObject = Titanium.UI.createImageView({
+			image : id
+		});
+
+	}
 	
 	// Add our prepared UI component to the form
 	if (fieldObject) {
@@ -190,6 +198,7 @@ exports.createForm = function(o) {
 
 	});
 
+	
 	form.addFields(o.fields, fieldRefs);
 	form.add(container);
 	

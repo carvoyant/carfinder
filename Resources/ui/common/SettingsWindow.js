@@ -97,7 +97,6 @@ var SettingsWindow = function(containingTab) {
 
 	// Listen for click events.
 	logoutButton.addEventListener('click', function() {
-        Ti.API.info('Removed the Username and Password: ' + Ti.App.Properties.getString('Username') + Ti.App.Properties.getString('Password'));
 		Ti.App.Properties.removeProperty('Username');
 		Ti.App.Properties.removeProperty('Password');
 		var activity = Titanium.Android.currentActivity;

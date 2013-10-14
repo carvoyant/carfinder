@@ -230,8 +230,8 @@ function ApplicationWindow() {
 								height : uiSize,
 								width : uiSize,
 								top : selectVehicleButton.size.height + 10,
-								right : 10
-							});
+								right : 10,
+								opacity : 0.95							});
 							
 							arrowImg = Titanium.UI.createImageView({
 								image : '/images/arrow.png',
@@ -252,7 +252,8 @@ function ApplicationWindow() {
 								color : 'black',
 								textAlign : Ti.UI.TEXT_ALIGNMENT_CENTER,
 								width : uiSize,
-								height : 40
+								height : 40,
+								opacity : 0.95
 							});
 							
 							win.add(signImg);
