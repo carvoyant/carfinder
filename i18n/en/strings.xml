@@ -47,10 +47,11 @@
 	<string name="logout">Logout</string>
 	<string name="close">Close</string>
 	<string name="satellite_view">Satellite View</string>
-	<string name="username">Username: </string>
-	<string name="password">Password: </string>
+	<string name="username">API Key: </string>
+	<string name="password">Security Token: </string>
 	<string name="remember_me">Remember Me </string>
 	<string name="register">Register</string>
 	<string name="login">Login</string>
 	<string name="login_failure">Unable to login.  Please Try again.</string>
+	<string name="refresh">Refresh</string>
 </resources>

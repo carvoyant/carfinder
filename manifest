@@ -1,9 +1,9 @@
-#appname: Car Finder
-#appid: com.carvoyant.carfinder
-#type: mobile
-#guid: aaeaa8d5-e4d1-4170-b813-4e872c5bf1c7
-#version: 1.0
-#publisher: Carvoyant 
-#url: not specified
-#image: appicon.png
-#desc: not specified
+#appname:Car Locater
+#appid:com.carvoyant.carlocater
+#type:mobile
+#guid:aaeaa8d5-e4d1-4170-b813-4e872c5bf1c7
+#version:1.0
+#publisher:Carvoyant
+#url:http://carvoyant.com
+#image:appicon.png
+#desc:Car Locater is a mobile application (Android and iOS) that is used to help you find your car. A carvoyant dongle with API key is required: http://www.carvoyant.com/services/developers/

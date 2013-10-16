@@ -27,6 +27,28 @@ function ApplicationWindow() {
 
 	win.add(mapView);
 
+
+
+	win.addEventListener('focus', function() {
+		Ti.App.fireEvent('refresh');
+		win.focusedflag = 1;
+		Ti.API.info("focus event rece☺ived");
+		if (navigationMode == true) {
+			Ti.API.info("adding location callback on focus");
+			Titanium.Geolocation.addEventListener('location', locationCallback);
+			Titanium.Geolocation.addEventListener('heading', headingCallback);
+		}
+	});
+	win.addEventListener('blur', function() {
+		win.focusedflag = 0;
+		Ti.API.info("blur event received");
+		Ti.API.info("removing location callback on pause");
+		Titanium.Geolocation.removeEventListener('location', locationCallback);
+		Titanium.Geolocation.removeEventListener('heading', headingCallback);
+	});
+
+
+
 	var selectVehicleButton = Titanium.UI.createButton({
 		title : selectedVehicle.title,
 		width: Titanium.Platform.displayCaps.platformWidth - 20,
@@ -56,6 +78,7 @@ function ApplicationWindow() {
 				//win.add(vehicleDataValidity(selectedVehicle.waypoint.timestamp))
 				selectedVehicle = vehicleData[_e.index];
 				Ti.App.Properties.setObject("defaultVehicle", selectedVehicle);
+				//this line
 				Map.resetPin_Map(mapView, selectedVehicle);
 				selectVehicleButton.setTitle(selectedVehicle.title);
 				Ti.API.info("Index: " + _e.index);
@@ -271,43 +294,7 @@ function ApplicationWindow() {
 							
 							win.addEventListener('postlayout', layoutComplete);
 
-							win.addEventListener('focus', function() {
-								win.focusedflag = 1;
-								if (navigationMode == true) {
-									Ti.API.info("focus event received");
-									Ti.API.info("adding location callback on focus");
-									Titanium.Geolocation.addEventListener('location', locationCallback);
-									Titanium.Geolocation.addEventListener('heading', headingCallback);
-								}
-							});
-							win.addEventListener('blur', function() {
-								win.focusedflag = 0;
-								Ti.API.info("blur event received");
-								Ti.API.info("removing location callback on pause");
-								Titanium.Geolocation.removeEventListener('location', locationCallback);
-								Titanium.Geolocation.removeEventListener('heading', headingCallback);
-							});
-							Ti.Android.currentActivity.addEventListener('resume', function() {
-								if (navigationMode == true) {
-									Ti.API.info("resume event received");
-									Ti.API.info("adding location callback on resume");
-									Titanium.Geolocation.addEventListener('location', locationCallback);
-									Titanium.Geolocation.addEventListener('heading', headingCallback);
-								}
-							});
-							Ti.Android.currentActivity.addEventListener('pause', function() {
-								Ti.API.info("pause event received");
-								Ti.API.info("removing location callback on close");
-								Titanium.Geolocation.removeEventListener('location', locationCallback);
-								Titanium.Geolocation.removeEventListener('heading', headingCallback);
-							});
-							Ti.Android.currentActivity.addEventListener('stop', function() {
-								Ti.API.info("stop event received");
-								Ti.API.info("removing location callback on stop");
-								Ti.API.info("currentActivity: " + JSON.stringify(Ti.Android.currentActivity));
-								Titanium.Geolocation.removeEventListener('location', locationCallback);
-								Titanium.Geolocation.removeEventListener('heading', headingCallback);
-							});
+
 		
 							win.addEventListener('androidback', exitNavigationMode);
 	
@@ -333,6 +320,8 @@ function ApplicationWindow() {
 
 	this.open = function(){win.open();};
 	this.mapView = mapView;
+	this.Map = Map;
+
 
 	return this;
 }
@@ -417,7 +406,6 @@ var translateErrorCode = function(code) {
 	}
 };
 //make constructor function the public component interface
+
+
 module.exports = ApplicationWindow;
- 
-
-

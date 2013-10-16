@@ -39,6 +39,8 @@ else {
 }
 
 var loginWindow = Ti.UI.createWindow();
+var loggedIn = false;
+var carvoyantConnect = require('lib/CarvoyantConnect');
 
 // This is a single context application with multiple windows in a stack
 (function() {
@@ -94,7 +96,7 @@ var loginWindow = Ti.UI.createWindow();
 			{
 				Ti.App.Username = Ti.App.Properties.getString('Username');
 				Ti.App.Password = Ti.App.Properties.getString('Password');				
-				var carvoyantConnect = require('lib/CarvoyantConnect');
+
 				carvoyantConnect.getVehicles();
 			}
 
@@ -106,22 +108,40 @@ var loginWindow = Ti.UI.createWindow();
 	}
 	
 })();
-
+		
+		var Window;
+		var appWindow;
 Ti.App.addEventListener('app:dataLoaded', function(e){
 	
-	loginWindow.close();
-
-	var Window = require('ui/handheld/android/ApplicationWindow');
-	var appWindow = new Window();
-	appWindow.open();
-	if(!Ti.App.Properties.hasProperty("mapType"))	
+	if(!loggedIn)
 	{
-		Ti.App.Properties.setBool('mapType', false);
+		loggedIn = true;
+		
+		loginWindow.close();
+	
+		Window = require('ui/handheld/android/ApplicationWindow');
+		appWindow = new Window(); 
+		appWindow.open();
+		if(!Ti.App.Properties.hasProperty("mapType"))	
+		{
+			Ti.App.Properties.setBool('mapType', false);
+		}
+		Ti.App.addEventListener('satClick', function(data){
+			if(data.hasCheck)				
+				appWindow.mapView.setMapType(Titanium.Map.SATELLITE_TYPE);
+			else
+				appWindow.mapView.setMapType(Titanium.Map.STANDARD_TYPE);
+		});
 	}
-	Ti.App.addEventListener('satClick', function(data){
-		if(data.hasCheck)				
-			appWindow.mapView.setMapType(Titanium.Map.SATELLITE_TYPE);
-		else
-			appWindow.mapView.setMapType(Titanium.Map.STANDARD_TYPE);
-	});
+	else{
+		Ti.API.info("refresh")
+		appWindow.mapView.removeAllAnnotations();
+		appWindow.Map.resetPin_Map(appWindow.mapView, Ti.App.Properties.getObject("defaultVehicle"));
+		appWindow.settings.close();
+	}
+});
+
+Ti.App.addEventListener('refresh', function(e)
+{
+	carvoyantConnect.getVehicles();	
 });

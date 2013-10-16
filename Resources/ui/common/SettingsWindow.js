@@ -36,6 +36,13 @@ var SettingsWindow = function(containingTab) {
 				fontSize : myfontsize
 			}
 		});
+		var refreshRow = Ti.UI.createTableViewRow({
+			title : L("refresh"),
+			height : myfontsize * 2,
+			font : {
+				fontSize : myfontsize
+			}
+		});
 		
 	} 
 	else {
@@ -59,12 +66,18 @@ var SettingsWindow = function(containingTab) {
 	satViewRow.hasCheck = Ti.App.Properties.getBool("mapType");
 	firstSection.add(myAccountRow);
 	firstSection.add(satViewRow);
+	firstSection.add(refreshRow);
 
 
 	satViewRow.addEventListener('click', function(e) {
 		e.source.hasCheck = !e.source.hasCheck;
 		Ti.App.Properties.setBool('mapType', e.source.hasCheck);
 		Ti.App.fireEvent('satClick', {hasCheck: e.source.hasCheck});
+			
+	});
+	refreshRow.addEventListener('click', function(e) {
+		Ti.App.fireEvent('refresh');
+		win.close();
 			
 	});
 

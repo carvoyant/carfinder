@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ti:app xmlns:ti="http://ti.appcelerator.org">
-    <id>com.carvoyant.carfinder</id>
-    <name>Car Finder</name>
+    <id>com.carvoyant.carlocater</id>
+    <name>Car Locater</name>
     <version>1.0</version>
     <publisher>Carvoyant</publisher>
     <url>http://carvoyant.com</url>
-    <description>Car Finder is a mobile application (Android and iOS) that is used to help you find your car. A carvoyant dongle with API key is required: http://www.carvoyant.com/services/developers/</description>
+    <description>Car Locater is a mobile application (Android and iOS) that is used to help you find your car. A carvoyant dongle with API key is required: http://www.carvoyant.com/services/developers/</description>
     <copyright>2013 by Carvoyant</copyright>
     <icon>appicon.png</icon>
     <persistent-wifi>false</persistent-wifi>
