@@ -2,10 +2,8 @@ exports.getVehicles = function() {
 	var data = [];
 	
 	var xhr = Titanium.Network.createHTTPClient({
-		username : '05f64b4a-c618-478a-9dea-afd53b9c201a',
-		password : '2f06c043-2f70-4722-bf02-15c9f465e0d6'
-		//username : Ti.App.Username,
-		//password : Ti.App.Password
+		username : Ti.App.Username,
+		password : Ti.App.Password
 	});
 	
 	xhr.onload = function(e) {
@@ -23,8 +21,7 @@ exports.getVehicles = function() {
 	  	alert(L('login_failure'));
 	};
 	
-	xhr.open("GET", "https://97.76.34.86:65100/Dashboard/api/vehicle", false);
-	//xhr.open("GET", "https://dash.carvoyant.com/api/vehicle", false);
+	xhr.open("GET", "https://dash.carvoyant.com/api/vehicle", false);
 	xhr.send();
 
 };
